@@ -12,15 +12,10 @@ const Counter = () => {
   }
 
   return (
-    <div className="App">
+    <div>
       <h1>{count}</h1>
-      <input
-        type="text"
-        value={count}
-        onChange={(event) => setCount(event.target.value)}
-      />
-      <button onClick={increment}>Increment</button>
-      <button onClick={decrement}>Decrement</button>
+      <button onClick={increment}>INCREMENT</button>
+      <button onClick={decrement}>DECREMENT</button>
     </div>
   );
 };
