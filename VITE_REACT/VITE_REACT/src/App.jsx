@@ -7,42 +7,25 @@ import "./styles/App.css";
 // import PostItem from "./components/PostItem";
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/Button/MyButton";
-import MyInput from "./components/UI/Input/MyInput";
+// import MyInput from "./components/UI/Input/MyInput";
 import PostForm from "./components/PostForm";
-import MySelect from "./components/UI/Select/mySelect";
+// import MySelect from "./components/UI/Select/mySelect";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
+import { usePosts } from "./hooks/usePosts";
+
+// { id: 1, title: "DJavaScript", body: "4Description" },
+// { id: 2, title: "BJavaScript", body: "2Description" },
+// { id: 3, title: "CJavaScript", body: "5Description" },
+// { id: 4, title: "AJavaScript", body: "1Description" },
+// { id: 5, title: "LJavaScript", body: "6Description" },
+// { id: 6, title: "EJavaScript", body: "3Description" },
 
 function App() {
-  const [posts, setPosts] = useState([
-    { id: 1, title: "DJavaScript", body: "4Description" },
-    { id: 2, title: "BJavaScript", body: "2Description" },
-    { id: 3, title: "CJavaScript", body: "5Description" },
-    { id: 4, title: "AJavaScript", body: "1Description" },
-    { id: 5, title: "LJavaScript", body: "6Description" },
-    { id: 6, title: "EJavaScript", body: "3Description" },
-  ]);
-
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({ sort: "", query: "" });
   const [modal, setModal] = useState(false);
-  // const [searchQuery, setSearchQuery] = useState("");
-  // const [selectedSort, setselectedSort] = useState("");
-
-  const sortedPosts = useMemo(() => {
-    console.log("WORK!");
-    if (filter.sort) {
-      return [...posts].sort((a, b) =>
-        a[filter.sort].localeCompare(b[filter.sort])
-      );
-    }
-    return posts;
-  }, [filter.sort, posts]);
-
-  const sortedAndSearchedPosts = useMemo(() => {
-    return sortedPosts.filter((post) =>
-      post.title.toLowerCase().includes(filter.query)
-    );
-  }, [filter.query, sortedPosts]);
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
