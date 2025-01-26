@@ -19,6 +19,7 @@ import Loader from "./components/UI/Loader/Loader";
 import { useFetcher } from "react-router-dom";
 import { useFetching } from "./hooks/useFetching";
 import { getPageCount, getPagesArray } from "./utils/pages";
+import Paggination from "./components/UI/Paggination/Paggination";
 
 // { id: 1, title: "DJavaScript", body: "4Description" },
 // { id: 2, title: "BJavaScript", body: "2Description" },
@@ -36,8 +37,6 @@ function App() {
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-  let pagesArray = getPagesArray(totalPages);
-
   const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
     const response = await PostService.getAll(limit, totalPages);
     setPosts(response.data);
@@ -47,7 +46,7 @@ function App() {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [page]);
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -56,6 +55,11 @@ function App() {
 
   const removePost = (post) => {
     setPosts(posts.filter((p) => p.id !== post.id));
+  };
+
+  const changePage = (page) => {
+    setPage(page);
+    // fetchPosts();
   };
 
   return (
@@ -88,17 +92,11 @@ function App() {
           title={"Posts of JS"}
         />
       )}
-      <div className="page__wrapper">
-        {pagesArray.map((item) => (
-          <span
-            onClick={() => setPage(item)}
-            key={item}
-            className={page === item ? "page page__current" : "page"}
-          >
-            {item}
-          </span>
-        ))}
-      </div>
+      <Paggination
+        totalPages={totalPages}
+        page={page}
+        changePage={changePage}
+      />
     </div>
   );
 }
