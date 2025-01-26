@@ -16,6 +16,8 @@ import { usePosts } from "./hooks/usePosts";
 import axios from "axios";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/Loader/Loader";
+import { useFetcher } from "react-router-dom";
+import { useFetching } from "./hooks/useFetching";
 
 // { id: 1, title: "DJavaScript", body: "4Description" },
 // { id: 2, title: "BJavaScript", body: "2Description" },
@@ -29,7 +31,10 @@ function App() {
   const [filter, setFilter] = useState({ sort: "", query: "" });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
-  const [isPostLoading, setIsPostLoading] = useState(false);
+  const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
+    const posts = await PostService.getAll();
+    setPosts(posts);
+  });
 
   useEffect(() => {
     fetchPosts();
@@ -44,15 +49,6 @@ function App() {
     setPosts(posts.filter((p) => p.id !== post.id));
   };
 
-  async function fetchPosts() {
-    setIsPostLoading(true);
-    setTimeout(async () => {
-      const posts = await PostService.getAll();
-      setPosts(posts);
-      setIsPostLoading(false);
-    }, 1500);
-  }
-
   return (
     <div className="App">
       <button onClick={fetchPosts}>GET POSTS</button>
@@ -64,6 +60,8 @@ function App() {
       </MyModal>
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
+      {postError && <h1>ERROR {postError}</h1>}
+
       {isPostLoading ? (
         <div
           style={{
