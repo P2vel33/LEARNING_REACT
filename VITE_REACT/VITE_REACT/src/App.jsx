@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 // import Counter from "./components/counter";
 // import ClassCounter from "./components/ClassCounter";
 // import reactLogo from './assets/react.svg'
@@ -13,6 +13,9 @@ import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
 import { usePosts } from "./hooks/usePosts";
+import axios from "axios";
+import PostService from "./API/PostService";
+import Loader from "./components/UI/Loader/Loader";
 
 // { id: 1, title: "DJavaScript", body: "4Description" },
 // { id: 2, title: "BJavaScript", body: "2Description" },
@@ -26,6 +29,11 @@ function App() {
   const [filter, setFilter] = useState({ sort: "", query: "" });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+  const [isPostLoading, setIsPostLoading] = useState(false);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -36,22 +44,43 @@ function App() {
     setPosts(posts.filter((p) => p.id !== post.id));
   };
 
+  async function fetchPosts() {
+    setIsPostLoading(true);
+    setTimeout(async () => {
+      const posts = await PostService.getAll();
+      setPosts(posts);
+      setIsPostLoading(false);
+    }, 1500);
+  }
+
   return (
     <div className="App">
+      <button onClick={fetchPosts}>GET POSTS</button>
       <MyButton style={{ marginTop: 30 }} onClick={() => setModal(true)}>
         Create post
       </MyButton>
       <MyModal visiable={modal} setVisiable={setModal}>
         <PostForm create={createPost} />
       </MyModal>
-
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
-      <PostList
-        remove={removePost}
-        POSTS={sortedAndSearchedPosts}
-        title={"Posts of JS"}
-      />
+      {isPostLoading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "50px",
+          }}
+        >
+          <Loader />
+        </div>
+      ) : (
+        <PostList
+          remove={removePost}
+          POSTS={sortedAndSearchedPosts}
+          title={"Posts of JS"}
+        />
+      )}
     </div>
   );
 }
