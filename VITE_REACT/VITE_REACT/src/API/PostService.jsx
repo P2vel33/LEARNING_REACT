@@ -1,10 +1,5 @@
-// import React from "react";
-
 import axios from "axios";
 
-// const PostService = () => {};
-
-// export default PostService;
 export default class PostService {
   static async getAll(limit = 10, page = 1) {
     const response = await axios.get(
@@ -16,6 +11,7 @@ export default class PostService {
         },
       }
     );
+    console.log(response);
     return response;
   }
 }
