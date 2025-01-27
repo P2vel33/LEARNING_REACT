@@ -1,21 +1,20 @@
 import "./styles/App.css";
 import React from "react";
-import { BrowserRouter, Route, Routes, Link } from "react-router";
+import { BrowserRouter, Route, Routes, Link, Navigate } from "react-router";
 import About from "./pages/About";
 import Posts from "./pages/Posts";
+import Navbar from "./components/UI/navbar/Navbar";
+import Error from "./pages/Error";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="navBar">
-        <Link to="/about">About</Link>
-        <Link to="/posts">Posts</Link>
-      </div>
+      <Navbar />
       <Routes>
         <Route path="/about" element={<About />} />
-      </Routes>
-      <Routes>
         <Route path="/posts" element={<Posts />} />
+        <Route path="/error" element={<Error />} />
+        <Route path="/*" element={<Navigate to="/error" replace />} />
       </Routes>
     </BrowserRouter>
   );
