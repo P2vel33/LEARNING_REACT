@@ -66,3 +66,8 @@
 .navBar__items {
   margin-left: auto;
 }
+
+.Post_btns {
+  display: flex;
+  border: 1px solid white;
+}
