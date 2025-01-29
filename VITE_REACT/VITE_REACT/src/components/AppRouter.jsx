@@ -4,15 +4,15 @@ import About from "../pages/About";
 import Posts from "../pages/Posts";
 import Error from "../pages/Error";
 import PostIdPages from "../pages/PostIdPages";
+import { routes } from "../router/router";
 
 const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/about" element={<About />} />
-      <Route exact path="/posts" element={<Posts />} />
-      <Route exact path="/posts/:id" element={<PostIdPages />} />
-      <Route path="/error" element={<Error />} />
-      <Route path="/*" element={<Navigate to="/error" replace />} />
+      {routes.map((item) => (
+        <Route key={item.path} path={item.path} element={item.element} />
+      ))}
+      <Route path="/*" element={<Navigate to="/posts" replace />} />
     </Routes>
   );
 };
