@@ -6,12 +6,15 @@ import Error from "../pages/Error";
 import PostIdPages from "../pages/PostIdPages";
 import { privateRoutes, publicRoutes } from "../router/router";
 import { AuthContext } from "../context";
+import Loader from "./UI/Loader/Loader";
 
 const AppRouter = () => {
-  const { isAuth, setIsAuth } = useContext(AuthContext);
-  // useEffect(() => {
-  //   console.log(isAuth);
-  // }, [isAuth]);
+  const { isAuth, isLoading } = useContext(AuthContext);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return isAuth ? (
     <Routes>
       {privateRoutes.map((item) => (
