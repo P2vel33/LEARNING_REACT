@@ -11,6 +11,7 @@ import { useFetching } from "../hooks/useFetching";
 import { getPageCount, getPagesArray } from "../utils/pages";
 import Paggination from "../components/UI/Paggination/Paggination";
 import { useObserver } from "../hooks/useObserver";
+import MySelect from "../components/UI/Select/mySelect";
 
 function Posts() {
   const [limit, setLimit] = useState(10);
@@ -21,7 +22,6 @@ function Posts() {
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
   const lastElement = useRef();
-  // const observer = useRef();
 
   const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
     const response = await PostService.getAll(limit, page);
@@ -30,28 +30,13 @@ function Posts() {
     setTotalPages(getPageCount(totalCount, limit));
   });
 
-  // const useObserver = (ref, canLoad, isLoading, callback) => {
-  // useEffect(() => {
-  //   if (isPostLoading) return;
-  //   if (observer.current) observer.current.disconnect();
-  //   let cb = (entries, observer) => {
-  //     if (entries[0].isIntersecting && page < totalPages) {
-  //       setPage(page + 1);
-  //       console.log(page);
-  //     }
-  //   };
-  //   observer.current = new IntersectionObserver(cb);
-  //   observer.current.observe(lastElement.current);
-  // }, [isPostLoading]);
-  // };
-
   useObserver(lastElement, page < totalPages, isPostLoading, () => {
     setPage(page + 1);
   });
 
   useEffect(() => {
     fetchPosts();
-  }, [page]);
+  }, [limit, page]);
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -78,6 +63,19 @@ function Posts() {
       </MyModal>
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
+
+      <MySelect
+        value={limit}
+        onChange={(value) => setLimit(value)}
+        defaultValue={"Limit`s count"}
+        options={[
+          { value: 5, name: "5" },
+          { value: 10, name: "10" },
+          { value: 20, name: "20" },
+          { value: -1, name: "All" },
+        ]}
+      />
+
       {postError && <h1>ERROR {postError}</h1>}
 
       <PostList
