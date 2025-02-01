@@ -10,6 +10,7 @@ import Loader from "../components/UI/Loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import { getPageCount, getPagesArray } from "../utils/pages";
 import Paggination from "../components/UI/Paggination/Paggination";
+import { useObserver } from "../hooks/useObserver";
 
 function Posts() {
   const [limit, setLimit] = useState(10);
@@ -19,12 +20,33 @@ function Posts() {
   const [filter, setFilter] = useState({ sort: "", query: "" });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+  const lastElement = useRef();
+  // const observer = useRef();
 
   const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
     const response = await PostService.getAll(limit, page);
-    setPosts(response.data);
+    setPosts([...posts, ...response.data]);
     const totalCount = response.headers["x-total-count"];
     setTotalPages(getPageCount(totalCount, limit));
+  });
+
+  // const useObserver = (ref, canLoad, isLoading, callback) => {
+  // useEffect(() => {
+  //   if (isPostLoading) return;
+  //   if (observer.current) observer.current.disconnect();
+  //   let cb = (entries, observer) => {
+  //     if (entries[0].isIntersecting && page < totalPages) {
+  //       setPage(page + 1);
+  //       console.log(page);
+  //     }
+  //   };
+  //   observer.current = new IntersectionObserver(cb);
+  //   observer.current.observe(lastElement.current);
+  // }, [isPostLoading]);
+  // };
+
+  useObserver(lastElement, page < totalPages, isPostLoading, () => {
+    setPage(page + 1);
   });
 
   useEffect(() => {
@@ -58,7 +80,18 @@ function Posts() {
       <PostFilter filter={filter} setFilter={setFilter} />
       {postError && <h1>ERROR {postError}</h1>}
 
-      {isPostLoading ? (
+      <PostList
+        remove={removePost}
+        POSTS={sortedAndSearchedPosts}
+        title={"Posts of JS"}
+      />
+
+      <div
+        ref={lastElement}
+        style={{ height: "20px", backgroundColor: "red" }}
+      ></div>
+
+      {isPostLoading && (
         <div
           style={{
             display: "flex",
@@ -68,12 +101,6 @@ function Posts() {
         >
           <Loader />
         </div>
-      ) : (
-        <PostList
-          remove={removePost}
-          POSTS={sortedAndSearchedPosts}
-          title={"Posts of JS"}
-        />
       )}
       <Paggination
         totalPages={totalPages}
