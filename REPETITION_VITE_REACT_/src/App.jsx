@@ -42,13 +42,17 @@ function App() {
     setPosts([...posts, post]);
   };
 
+  const removePost = (post) => {
+    setPosts(posts.filter((item) => item.id !== post.id));
+  };
+
   return (
     <>
       <PostForm createPost={createNewPost} />
       <div className="">
         {posts.map((element) => (
           // console.log(element);
-          <PostItem key={element.id} posts={element} />
+          <PostItem key={element.id} post={element} remove={removePost} />
         ))}
       </div>
     </>
