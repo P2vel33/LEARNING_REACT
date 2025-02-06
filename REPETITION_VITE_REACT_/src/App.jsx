@@ -7,6 +7,7 @@ import { use } from "react";
 import MyButton from "./components/UI/button/MyButton";
 import MyInput from "./components/UI/input/MyInput";
 import PostForm from "./components/PostForm";
+import PostsList from "./components/PostsList";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -38,6 +39,12 @@ function App() {
     },
   ]);
 
+  const getPosts = async () => {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    setPosts(response);
+    console.log(response);
+  };
+
   const createNewPost = (post) => {
     setPosts([...posts, post]);
   };
@@ -49,12 +56,7 @@ function App() {
   return (
     <>
       <PostForm createPost={createNewPost} />
-      <div className="">
-        {posts.map((element) => (
-          // console.log(element);
-          <PostItem key={element.id} post={element} remove={removePost} />
-        ))}
-      </div>
+      <PostsList posts={posts} remove={removePost} />
     </>
   );
 }
