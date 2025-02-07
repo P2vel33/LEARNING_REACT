@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./styles/App.css";
@@ -8,41 +8,48 @@ import MyButton from "./components/UI/button/MyButton";
 import MyInput from "./components/UI/input/MyInput";
 import PostForm from "./components/PostForm";
 import PostsList from "./components/PostsList";
+import axios from "axios";
+// import PostService from "./API/PostService";
 
 function App() {
   const [count, setCount] = useState(0);
   const [posts, setPosts] = useState([
     {
       id: 1,
-      name: "JS",
-      description: "JS JS JS",
+      title: "JS",
+      body: "JS JS JS",
     },
     {
       id: 2,
-      name: "JS",
-      description: "JS JS JS",
+      title: "JS",
+      body: "JS JS JS",
     },
     {
       id: 3,
-      name: "JS",
-      description: "JS JS JS",
+      title: "JS",
+      body: "JS JS JS",
     },
     {
       id: 4,
-      name: "JS",
-      description: "JS JS JS",
+      title: "JS",
+      body: "JS JS JS",
     },
     {
       id: 5,
-      name: "JS",
-      description: "JS JS JS",
+      title: "JS",
+      body: "JS JS JS",
     },
   ]);
 
-  const getPosts = async () => {
-    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-    setPosts(response);
-    console.log(response);
+  // useEffect(() => {
+  //   newPosts();
+  // }, []);
+
+  const newPosts = async () => {
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+    setPosts(response.data);
   };
 
   const createNewPost = (post) => {
@@ -55,6 +62,7 @@ function App() {
 
   return (
     <>
+      <button onClick={newPosts}>Download</button>
       <PostForm createPost={createNewPost} />
       <PostsList posts={posts} remove={removePost} />
     </>
