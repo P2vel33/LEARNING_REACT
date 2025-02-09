@@ -1,20 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./styles/App.css";
-import PostItem from "./components/PostItem";
-import { use } from "react";
-import MyButton from "./components/UI/button/MyButton";
-import MyInput from "./components/UI/input/MyInput";
 import PostForm from "./components/PostForm";
 import PostsList from "./components/PostsList";
-import axios from "axios";
 import PostService from "./API/PostService";
+import MySelect from "./components/UI/select/MySelect";
 // import PostService from "./API/PostService";
 
 function App() {
-  const [count, setCount] = useState(0);
   const [posts, setPosts] = useState([]);
+  const [sortPosts, setSortPosts] = useState([]);
+  const [sort, setSort] = useState("");
+  useMemo(() => {
+    posts.sort((a, b) => a[sort].localeCompare(b[sort]));
+  }, [sort]);
 
   useEffect(() => {
     newPosts();
@@ -35,8 +33,14 @@ function App() {
 
   return (
     <>
-      <button onClick={newPosts}>Download</button>
       <PostForm createPost={createNewPost} />
+      <select onChange={(event) => setSort(event.target.value)}>
+        <option value="" disabled selected>
+          Sort
+        </option>
+        <option value="title">of name</option>
+        <option value="body">of description</option>
+      </select>
       <PostsList posts={posts} remove={removePost} title={"Posts of JS"} />
     </>
   );
