@@ -64,7 +64,7 @@ function App() {
     <>
       <button onClick={newPosts}>Download</button>
       <PostForm createPost={createNewPost} />
-      <PostsList posts={posts} remove={removePost} />
+      <PostsList posts={posts} remove={removePost} title={"Posts of JS"} />
     </>
   );
 }
