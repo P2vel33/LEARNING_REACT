@@ -4,15 +4,25 @@ import PostForm from "./components/PostForm";
 import PostsList from "./components/PostsList";
 import PostService from "./API/PostService";
 import MySelect from "./components/UI/select/MySelect";
+import MyInput from "./components/UI/input/MyInput";
+import { usePosts, useSortedPosts } from "./hooks/usePosts";
+
 // import PostService from "./API/PostService";
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [sortPosts, setSortPosts] = useState([]);
+  // const [sortPosts, setSortPosts] = useState([]);
   const [sort, setSort] = useState("");
-  useMemo(() => {
-    posts.sort((a, b) => a[sort].localeCompare(b[sort]));
-  }, [sort]);
+  const [search, setSearch] = useState("");
+  const searchAndSortedPosts = usePosts(posts, sort, search);
+  // console.log(searchAndSortedPosts);
+  // useMemo(() => {
+  //   if (search && Array.isArray(sortPosts)) {
+  //     sortPosts.filter((item) => {
+  //       return item.title.toLowerCase().includes(search);
+  //     });
+  //   }
+  // }, [search]);
 
   useEffect(() => {
     newPosts();
@@ -33,15 +43,18 @@ function App() {
 
   return (
     <>
+      <MyInput
+        placeholder="Search"
+        onChange={(event) => setSearch(event.target.value)}
+        xyi={search}
+      />
       <PostForm createPost={createNewPost} />
-      <select onChange={(event) => setSort(event.target.value)}>
-        <option value="" disabled selected>
-          Sort
-        </option>
-        <option value="title">of name</option>
-        <option value="body">of description</option>
-      </select>
-      <PostsList posts={posts} remove={removePost} title={"Posts of JS"} />
+      <MySelect setSort={setSort} />
+      <PostsList
+        posts={searchAndSortedPosts}
+        remove={removePost}
+        title={"Posts of JS"}
+      />
     </>
   );
 }
