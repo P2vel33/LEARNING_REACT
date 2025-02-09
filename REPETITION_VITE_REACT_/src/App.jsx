@@ -9,6 +9,7 @@ import MyInput from "./components/UI/input/MyInput";
 import PostForm from "./components/PostForm";
 import PostsList from "./components/PostsList";
 import axios from "axios";
+import PostService from "./API/PostService";
 // import PostService from "./API/PostService";
 
 function App() {
@@ -46,10 +47,8 @@ function App() {
   // }, []);
 
   const newPosts = async () => {
-    const response = await axios.get(
-      "https://jsonplaceholder.typicode.com/posts"
-    );
-    setPosts(response.data);
+    const res = await PostService.getAll();
+    setPosts(res.data);
   };
 
   const createNewPost = (post) => {
