@@ -14,37 +14,11 @@ import PostService from "./API/PostService";
 
 function App() {
   const [count, setCount] = useState(0);
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: "JS",
-      body: "JS JS JS",
-    },
-    {
-      id: 2,
-      title: "JS",
-      body: "JS JS JS",
-    },
-    {
-      id: 3,
-      title: "JS",
-      body: "JS JS JS",
-    },
-    {
-      id: 4,
-      title: "JS",
-      body: "JS JS JS",
-    },
-    {
-      id: 5,
-      title: "JS",
-      body: "JS JS JS",
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
 
-  // useEffect(() => {
-  //   newPosts();
-  // }, []);
+  useEffect(() => {
+    newPosts();
+  }, []);
 
   const newPosts = async () => {
     const res = await PostService.getAll();
