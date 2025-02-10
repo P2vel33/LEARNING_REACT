@@ -5,24 +5,15 @@ import PostsList from "./components/PostsList";
 import PostService from "./API/PostService";
 import MySelect from "./components/UI/select/MySelect";
 import MyInput from "./components/UI/input/MyInput";
-import { usePosts, useSortedPosts } from "./hooks/usePosts";
-
-// import PostService from "./API/PostService";
+import { usePosts } from "./hooks/usePosts";
+import Loader from "./components/UI/loader/Loader";
 
 function App() {
   const [posts, setPosts] = useState([]);
-  // const [sortPosts, setSortPosts] = useState([]);
   const [sort, setSort] = useState("");
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const searchAndSortedPosts = usePosts(posts, sort, search);
-  // console.log(searchAndSortedPosts);
-  // useMemo(() => {
-  //   if (search && Array.isArray(sortPosts)) {
-  //     sortPosts.filter((item) => {
-  //       return item.title.toLowerCase().includes(search);
-  //     });
-  //   }
-  // }, [search]);
 
   useEffect(() => {
     newPosts();
@@ -30,6 +21,9 @@ function App() {
 
   const newPosts = async () => {
     const res = await PostService.getAll();
+    if (res.data) {
+      setIsLoading(false);
+    }
     setPosts(res.data);
   };
 
@@ -43,18 +37,23 @@ function App() {
 
   return (
     <>
+      <PostForm createPost={createNewPost} />
+      <hr style={{ margin: "10px 0 10px 0" }} />
       <MyInput
         placeholder="Search"
         onChange={(event) => setSearch(event.target.value)}
         xyi={search}
       />
-      <PostForm createPost={createNewPost} />
       <MySelect setSort={setSort} />
-      <PostsList
-        posts={searchAndSortedPosts}
-        remove={removePost}
-        title={"Posts of JS"}
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <PostsList
+          posts={searchAndSortedPosts}
+          remove={removePost}
+          title={"Posts of JS"}
+        />
+      )}
     </>
   );
 }
