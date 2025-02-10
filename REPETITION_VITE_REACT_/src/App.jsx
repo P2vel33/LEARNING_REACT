@@ -7,12 +7,15 @@ import MySelect from "./components/UI/select/MySelect";
 import MyInput from "./components/UI/input/MyInput";
 import { usePosts } from "./hooks/usePosts";
 import Loader from "./components/UI/loader/Loader";
+import MyButton from "./components/UI/button/MyButton";
+import MyModal from "./components/UI/mymodal/MyModal";
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [sort, setSort] = useState("");
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [visiable, setVisiable] = useState(false);
   const searchAndSortedPosts = usePosts(posts, sort, search);
 
   useEffect(() => {
@@ -37,7 +40,11 @@ function App() {
 
   return (
     <>
-      <PostForm createPost={createNewPost} />
+      <MyButton onClick={() => setVisiable(true)}>Create post</MyButton>
+      <MyModal visiable={visiable} setVisiable={setVisiable}>
+        <PostForm createPost={createNewPost} setVisiable={setVisiable} />
+      </MyModal>
+
       <hr style={{ margin: "10px 0 10px 0" }} />
       <MyInput
         placeholder="Search"

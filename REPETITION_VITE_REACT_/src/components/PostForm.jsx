@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import MyInput from "./UI/input/MyInput";
 import MyButton from "./UI/button/MyButton";
 
-const PostForm = ({ createPost }) => {
-  const [addPost, setAddPost] = useState({ name: "", description: "" });
+const PostForm = ({ createPost, setVisiable }) => {
+  const [addPost, setAddPost] = useState({ title: "", body: "" });
 
   const addNewPost = (e) => {
     e.preventDefault();
     const newPost = { id: Date.now(), ...addPost };
     createPost(newPost);
-    setAddPost({ name: "", description: "" });
+    setAddPost({ title: "", body: "" });
+    setVisiable(false);
   };
 
   return (
@@ -17,15 +18,13 @@ const PostForm = ({ createPost }) => {
       <form className="">
         <MyInput
           placeholder="Name"
-          onChange={(e) => setAddPost({ ...addPost, name: e.target.value })}
-          xyi={addPost.name}
+          onChange={(e) => setAddPost({ ...addPost, title: e.target.value })}
+          xyi={addPost.title}
         />
         <MyInput
           placeholder="Description"
-          onChange={(e) =>
-            setAddPost({ ...addPost, description: e.target.value })
-          }
-          xyi={addPost.description}
+          onChange={(e) => setAddPost({ ...addPost, body: e.target.value })}
+          xyi={addPost.body}
         />
       </form>
       <MyButton onClick={addNewPost}>Create</MyButton>
