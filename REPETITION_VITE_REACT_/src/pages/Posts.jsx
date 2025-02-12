@@ -1,17 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
-import "./styles/App.css";
-import PostForm from "./components/PostForm";
-import PostsList from "./components/PostsList";
-import PostService from "./API/PostService";
-import MySelect from "./components/UI/select/MySelect";
-import MyInput from "./components/UI/input/MyInput";
-import { usePosts } from "./hooks/usePosts";
-import Loader from "./components/UI/loader/Loader";
-import MyButton from "./components/UI/button/MyButton";
-import MyModal from "./components/UI/mymodal/MyModal";
-import Posts from "./pages/Posts";
+import React, { useEffect, useState } from "react";
+import { usePosts } from "../hooks/usePosts";
+import PostService from "../API/PostService";
+import MyButton from "../components/UI/button/MyButton";
+import MyModal from "../components/UI/mymodal/MyModal";
+import PostForm from "../components/PostForm";
+import MyInput from "../components/UI/input/MyInput";
+import MySelect from "../components/UI/select/MySelect";
+import Loader from "../components/UI/loader/Loader";
+import PostsList from "../components/PostsList";
 
-function App() {
+const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [sort, setSort] = useState("");
   const [search, setSearch] = useState("");
@@ -41,7 +39,7 @@ function App() {
 
   return (
     <>
-      {/* <MyButton onClick={() => setVisiable(true)}>Create post</MyButton>
+      <MyButton onClick={() => setVisiable(true)}>Create post</MyButton>
       <MyModal visiable={visiable} setVisiable={setVisiable}>
         <PostForm createPost={createNewPost} setVisiable={setVisiable} />
       </MyModal>
@@ -61,10 +59,9 @@ function App() {
           remove={removePost}
           title={"Posts of JS"}
         />
-      )} */}
-      <Posts />
+      )}
     </>
   );
-}
+};
 
-export default App;
+export default Posts;
