@@ -11,6 +11,7 @@ const PostItem = (props) => {
         <div>Description:{props.post.body}</div>
       </div>
       <div className="Post_btns">
+        <MyButton style={{ marginRight: "15px" }}>Open</MyButton>
         <MyButton onClick={() => props.remove(props.post)}>Remove</MyButton>
       </div>
     </div>

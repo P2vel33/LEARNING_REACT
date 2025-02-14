@@ -6,7 +6,13 @@ export default class PostService {
     const response = await axios.get(
       "https://jsonplaceholder.typicode.com/posts"
     );
-    // console.log(response.data);
+    return response;
+  }
+
+  static async getOnePage(id) {
+    const response = await axios.get(
+      `https://jsonplaceholder.typicode.com/comments?id=${id}`
+    );
     return response;
   }
 }

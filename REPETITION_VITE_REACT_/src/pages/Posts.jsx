@@ -29,6 +29,12 @@ const Posts = () => {
     setPosts(res.data);
   };
 
+  const openPost = async (id) => {
+    const response = await PostService.getOnePage(id);
+    console.log(response.data[0]);
+  };
+  openPost(1);
+
   const createNewPost = (post) => {
     setPosts([...posts, post]);
   };
